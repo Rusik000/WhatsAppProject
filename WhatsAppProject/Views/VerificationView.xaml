@@ -1,0 +1,97 @@
+﻿<Window x:Class="WhatsAppProject.Views.VerificationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WhatsAppProject.Views"
+        mc:Ignorable="d"
+        Title="WhatsApp" Height="608" Width="900" 
+        MaxHeight="608" MaxWidth="900"
+        MinHeight="608" MinWidth="900">
+    <Window.Resources>
+        <Style TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Viewbox>
+                            <Border x:Name="Border" CornerRadius="10"
+                                    Background="YellowGreen"
+                                    Width="40" Height="20">
+                                <Border.Effect>
+                                    <DropShadowEffect ShadowDepth="0.5" Direction="0" Opacity="0.3" />
+                                </Border.Effect>
+                                <Ellipse x:Name="Ellipse" Fill="#FFFFFFFF" Stretch="Uniform"
+                                         Margin="2 1 2 1"
+                                         Stroke="Gray" StrokeThickness="0.2"
+                                         HorizontalAlignment="Stretch">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="1" Opacity="0.3" Direction="260" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                            </Border>
+                        </Viewbox>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="Checked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Border"
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                        To="#FF4CD661"
+                                                        Duration="0:0:0.1" />
+                                        <ThicknessAnimation Storyboard.TargetName="Ellipse"
+                                                            Storyboard.TargetProperty="Margin"
+                                                            To="20 1 2 1"
+                                                            Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Unchecked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Border"
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                        To="White"
+                                                        Duration="0:0:0.1" />
+                                        <ThicknessAnimation Storyboard.TargetName="Ellipse"
+                                                            Storyboard.TargetProperty="Margin"
+                                                            To="2 1 2 1"
+                                                            Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <StackPanel x:Name="Stack" Background="White">
+        <WrapPanel Background="#FF9EEE2B" Height="173">
+            <Label FontSize="50" FontFamily="Comic Sans MS" Margin="270,50,0,0" >Verification</Label>
+        </WrapPanel>
+        <Canvas Height="185">
+            <TextBlock Canvas.Left="100" Canvas.Top="30" Text="Verify Code" FontSize="25" Height="40" Margin="65,30,0,0" FontFamily="Comic Sans MS" ></TextBlock>
+            <WrapPanel Canvas.Left="320" Canvas.Top="60">
+                <Image Width="55" Height="40"  Source="/Images/VerifyKey.png" Margin="15,0,0,0" Stretch="Fill"></Image>
+                <TextBox Background="LawnGreen"  Height="40"  x:Name="CodeVerifyTxtBx" Width="208"  BorderThickness="0" FontSize="27" TextAlignment="Left" FontStyle="Normal"  Foreground="White" FontFamily="Times New Roman" Margin="15,0,0,0"/>
+                <TextBlock FontSize="26" Margin="10,0,0,0" Foreground="Black" > Must be 6 character !</TextBlock>
+            </WrapPanel>
+            <!--<TextBox Canvas.Top="72" Canvas.Left="330" Width="300" Height="42" Background="Green" >
+                <TextBox.Template>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border CornerRadius="20" BorderBrush="Black" BorderThickness="3" >
+                            <StackPanel Orientation="Horizontal">
+                               
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </TextBox.Template>
+            </TextBox>-->
+            <ToggleButton x:Name="AgreeTglBtn" Canvas.Left="280" Canvas.Bottom="30" />
+            <Label Canvas.Bottom="20" Canvas.Right="210" FontSize="20" >"I agree to the Terms and Conditions"</Label>
+        </Canvas>
+        <Canvas>
+            <Button Command="{Binding NextCommand}"   Content="Next" Height="51" Width="237" Canvas.Left="350" Canvas.Top="100"  Background="#FF9EEE2B" FontSize="30"></Button>
+        </Canvas>
+    </StackPanel>
+</Window>

@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="WhatsAppProject.Views.UserControls.AttachUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WhatsAppProject.Views.UserControls" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="180" d:DesignWidth="60" Background="White">
+    <Grid Background="LightGreen">
+        <StackPanel>
+            <Button Command="{Binding SendLocationCommand}" HorizontalAlignment="Left"  Height="50" Width="50" Margin="5" Background="LightGreen" BorderBrush="LightGreen">
+                <materialDesign:PackIcon Kind="Location" Background="LightGreen" BorderBrush="LightGreen" Height="50" Width="50" Foreground="Green"></materialDesign:PackIcon>
+            </Button>
+            <Button Command="{Binding SendFileCommand}" HorizontalAlignment="Left"  Height="50" Width="50" Margin="5" Background="LightGreen" BorderBrush="LightGreen">
+                <materialDesign:PackIcon Kind="File" Background="LightGreen" BorderBrush="LightGreen" Height="50" Width="50" Foreground="Green"></materialDesign:PackIcon>
+            </Button>
+            <Button Command="{Binding SendImageCommand}" HorizontalAlignment="Left" Height="50" Width="50" Margin="5" Background="LightGreen" BorderBrush="LightGreen">
+                <materialDesign:PackIcon Kind="Image" Background="LightGreen" BorderBrush="LightGreen" Height="50" Width="50" Foreground="Green"></materialDesign:PackIcon>
+            </Button>
+        </StackPanel>
+
+
+    </Grid>
+</UserControl>
