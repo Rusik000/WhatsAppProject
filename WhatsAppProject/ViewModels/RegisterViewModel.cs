@@ -39,8 +39,15 @@ namespace WhatsAppProject.ViewModels
         public RelayCommand SelectionChanged { get; set; }
 
         public RelayCommand NextCommand { get; set; }
+        public RelayCommand LoadedCommand { get; set; }
         public RegisterViewModel()
         {
+            LoadedCommand = new RelayCommand((sender) =>
+            {
+                //icinde yoxlasin  qeydiyyat olan nomre
+                //varsa birbasa chat bolmesine atsin 
+
+            });
             SetData();
             SelectionChanged = new RelayCommand((sender) =>
             {
@@ -48,7 +55,7 @@ namespace WhatsAppProject.ViewModels
             });
             NextCommand = new RelayCommand((sender) =>
             {
-               // SendPhoneNumber();
+                // SendPhoneNumber();
                 VerificationView verificationView = new VerificationView();
                 RegisterView.Hide();
                 verificationView.Show();

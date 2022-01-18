@@ -5,14 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WhatsAppProject.Views" 
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:ViewModels="clr-namespace:WhatsAppProject.ViewModels"
-        x:Class="WhatsAppProject.Views.RegisterView"
+        xmlns:ViewModels="clr-namespace:WhatsAppProject.ViewModels" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    x:Class="WhatsAppProject.Views.RegisterView"
         mc:Ignorable="d"
-        Title="WhatsApp" Height="608" WindowState="Normal" MaxHeight="608" MaxWidth="900" MinHeight="608" MinWidth="900" Width="900" Background="#FF9EEE2B">
+        Title="WhatsApp"  Height="608" WindowState="Normal" MaxHeight="608" MaxWidth="900" MinHeight="608" MinWidth="900" Width="900" Background="#FF9EEE2B">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <StackPanel Background="#FF9EEE2B" Margin="0,0,0,15">
         <TextBlock Width="400" TextAlignment="Center" FontSize="40" FontFamily="Comic Sans MS" FontStyle="Italic" Margin="0,0,0,0"><Run Text="Welcome Whatsapp" /></TextBlock>
         <StackPanel>
-            <Image Source="../Images/Logo.png" Height="199" Width="441" OpacityMask="White"/>
+            <Label Height="199" Width="441" OpacityMask="White">
+                <materialDesign:PackIcon Kind="Whatsapp" Width="441" Height="199" Background="#FF9EEE2B" Foreground="White"  />
+            </Label>
             <TextBlock Text="Please enter your phone number:" FontSize="20" FontWeight="Bold" FontStyle="Italic" Margin="0,20,0,0" Width="308"/>
         </StackPanel>
         <WrapPanel Margin="0,16.7,0,0">
