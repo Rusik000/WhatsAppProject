@@ -37,6 +37,8 @@ namespace WhatsAppProject.ViewModels
         public RelayCommand FilterCommand { get; set; }
         public RelayCommand SelectionChangedCommand { get; set; }
 
+
+
         private static readonly Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         private const int PORT = 27001;
@@ -94,8 +96,7 @@ namespace WhatsAppProject.ViewModels
 
                 chat1.FullnameTxtBlck.Text = client.FullName;
                 chatView.MessageGrid.Children.Add(chat1);
-                ConnectToServer();
-
+                //ConnectToServer();
             }
             if (client == null)
             {
@@ -162,7 +163,7 @@ namespace WhatsAppProject.ViewModels
                     FullName="Murad Mati",
                     ImagePath="../Images/Murad.jpg",
                     Message="KFC-nin qabagindayam gel",
-                    Time="5:40 PM"
+                    Time="  5:40 PM"
                 },
                 new Client
                 {

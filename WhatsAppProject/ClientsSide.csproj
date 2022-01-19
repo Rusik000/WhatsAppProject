@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="ViewModels\AttachUserControlViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />

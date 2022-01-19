@@ -12,6 +12,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Rest.Verify.V2.Service;
 using WhatsAppProject.Command;
+using WhatsAppProject.Models;
 using WhatsAppProject.Views;
 
 namespace WhatsAppProject.ViewModels
@@ -30,9 +31,6 @@ namespace WhatsAppProject.ViewModels
 
 
         public static string Number { get; set; }
-
-
-
         public RegionInfo GetRegionInfo { get; set; }
 
 
@@ -40,13 +38,34 @@ namespace WhatsAppProject.ViewModels
 
         public RelayCommand NextCommand { get; set; }
         public RelayCommand LoadedCommand { get; set; }
+        public Client client { get; set; }
+        public int Count { get; set; } = 0;
+
+        public string filename { get; set; } = " ";
         public RegisterViewModel()
         {
             LoadedCommand = new RelayCommand((sender) =>
             {
-                //icinde yoxlasin  qeydiyyat olan nomre
-                //varsa birbasa chat bolmesine atsin 
+                //Count++;
+                //filename = "MyAllData.txt";
+                //if (File.Exists(filename))
+                //{
+                //    using (var fs = new FileStream(filename, FileMode.OpenOrCreate))
+                //    {
+                //        using (var sr = new StreamReader(fs, Encoding.ASCII))
+                //        {
+                //            var text = sr.ReadToEnd();
+                //            if (text == "555280008" || text == "0555280008")
+                //            {
+                //                RegisterView.Hide();
+                //                ChatView chatView = new ChatView();
+                //                chatView.Show();
+                //            }
+                //        }
+                //    }
 
+
+                //}
             });
             SetData();
             SelectionChanged = new RelayCommand((sender) =>
@@ -55,6 +74,7 @@ namespace WhatsAppProject.ViewModels
             });
             NextCommand = new RelayCommand((sender) =>
             {
+                WriteDataToFile();
                 // SendPhoneNumber();
                 VerificationView verificationView = new VerificationView();
                 RegisterView.Hide();
@@ -70,6 +90,25 @@ namespace WhatsAppProject.ViewModels
             });
 
         }
+
+        private void WriteDataToFile()
+        {
+            User user = new User()
+            {
+                Name = RegisterView.FullnameTxtbx.Text,
+                PhoneNumber = RegisterView.PhoneTxtBx.Text
+            };
+
+            using (FileStream fs = new FileStream($"{user.Name}.txt", FileMode.OpenOrCreate))
+            {
+                using (StreamWriter sw = new StreamWriter(fs, Encoding.ASCII))
+                {                   
+                    sw.Write(user.PhoneNumber);
+                }
+            }
+
+        }
+
         private void SendPhoneNumber()
         {
 

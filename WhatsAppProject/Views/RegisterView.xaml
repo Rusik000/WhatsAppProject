@@ -20,28 +20,35 @@
             <Label Height="199" Width="441" OpacityMask="White">
                 <materialDesign:PackIcon Kind="Whatsapp" Width="441" Height="199" Background="#FF9EEE2B" Foreground="White"  />
             </Label>
-            <TextBlock Text="Please enter your phone number:" FontSize="20" FontWeight="Bold" FontStyle="Italic" Margin="0,20,0,0" Width="308"/>
+            <TextBlock Text="Please enter your phone number and name:" FontSize="18" FontWeight="Bold" FontStyle="Italic" Margin="0,20,0,0" Width="377"/>
         </StackPanel>
-        <WrapPanel Margin="0,16.7,0,0">
-            <ComboBox   x:Name="CountryComboBx"  Height="38" Width="277" Margin="300,5,40,0" Foreground="Black" BorderBrush="WhiteSmoke" BorderThickness="0" Background="WhiteSmoke" FontSize="20" ItemsSource="{Binding CultureList}">
+
+        <Canvas Height="150">
+
+            <ComboBox Canvas.Left="0" Canvas.Top="10"  x:Name="CountryComboBx"  Height="38" Width="277" Margin="300,5,40,0" Foreground="Black" BorderBrush="WhiteSmoke" BorderThickness="0" Background="WhiteSmoke" FontSize="20" ItemsSource="{Binding CultureList}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding SelectedValue, ElementName=CountryComboBx}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
-        </WrapPanel>
-        <WrapPanel Margin="0,15,0,0">
 
-            <TextBlock  x:Name="PhoneCodeTxtBx" FontSize="20" Width="54" Margin="230,4,0,0" Background="WhiteSmoke" Height="36"></TextBlock>
-
-            <TextBox  Name="PhoneTxtBx"  Background="WhiteSmoke" Width="273" Height="36"   BorderThickness="0" FontSize="27" TextAlignment="Left" FontStyle="Normal"   FontFamily="Times New Roman" Margin="20,0,0,0">
+            <TextBox Canvas.Top="60" Canvas.Left="300" Name="FullnameTxtbx"  HorizontalAlignment="Center" Background="WhiteSmoke" Width="277" Height="36"   BorderThickness="0" FontSize="27" TextAlignment="Left" FontStyle="Normal"   FontFamily="Times New Roman" Margin="0,0,10,0">
 
             </TextBox>
-           
-        </WrapPanel>
-        <WrapPanel>
-            <Button Command="{Binding NextCommand}" Width="373" Margin="240,80,0,0" Height="38" FontSize="25" FontFamily="Comic Sans MS" Background="#FF9EEE2B" BorderBrush="White" BorderThickness="2" Content="Next"/>
-        </WrapPanel>
+
+
+
+            <TextBlock Canvas.Top="100"   x:Name="PhoneCodeTxtBx" FontSize="20" Width="54" Margin="230,4,0,0" Background="WhiteSmoke" Height="36"></TextBlock>
+
+            <TextBox Canvas.Top="105" Canvas.Left="280"  Name="PhoneTxtBx"  Background="WhiteSmoke" Width="277" Height="36"   BorderThickness="0" FontSize="27" TextAlignment="Left" FontStyle="Normal"   FontFamily="Times New Roman" Margin="20,0,0,0">
+
+            </TextBox>
+
+        </Canvas>
+
+        <Canvas>
+            <Button  Command="{Binding NextCommand}" Width="373" Margin="240,80,0,0" Height="38" FontSize="25" FontFamily="Comic Sans MS" Background="#FF9EEE2B" BorderBrush="White" BorderThickness="2" Content="Next"/>
+        </Canvas>
     </StackPanel>
 </Window>
