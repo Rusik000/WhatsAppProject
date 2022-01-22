@@ -1,6 +1,7 @@
 ﻿using ServerSide;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -28,14 +29,36 @@ namespace WhatsAppProject.ViewModels
         public RelayCommand MouseEnterCommand { get; set; }
         public RelayCommand MouseLeaveCommand { get; set; }
 
+        public RelayCommand LoadedCommand { get; set; }
+
+        private ObservableCollection<string> _messages;
+
+        public ObservableCollection<string> Messages
+        {
+            get { return _messages; }
+            set { _messages = value; OnPropertyChanged(); }
+        }
+
+        private static readonly Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        private const int PORT = 27001;
         public int Count { get; set; } = 0;
+
+        public int SenderCount { get; set; } = 0;
 
         public MessageViewModel()
         {
+            Messages = new ObservableCollection<string>();
+            LoadedCommand = new RelayCommand((sender) =>
+            {
+                ConnectToServer();
+                RequestLoop();
+            });
             AttachCommand = new RelayCommand((sender) =>
             {
                 AddAttachUserControl();
             });
+
             MouseEnterCommand = new RelayCommand((sender) =>
             {
 
@@ -65,7 +88,7 @@ namespace WhatsAppProject.ViewModels
 
             SendTextCommand = new RelayCommand((sender) =>
             {
-                RequestLoop();
+                SendRequest();
             });
             SendVoiceCommand = new RelayCommand((sender) =>
             {
@@ -87,28 +110,8 @@ namespace WhatsAppProject.ViewModels
             }
             if (Count % 2 == 0)
             {
-
                 messageView.HiddenGrid.Visibility = Visibility.Hidden;
             }
-        }
-
-        private void RequestLoop()
-        {
-            var sender = Task.Run(() =>
-            {
-                while (true)
-                {
-                    SendRequest();
-                }
-            });
-            var receiver = Task.Run(() =>
-            {
-                while (true)
-                {
-                    ReceiveResponse();
-                }
-            });
-            Task.WaitAll(sender, receiver);
         }
         private void SendRequest()
         {
@@ -118,22 +121,105 @@ namespace WhatsAppProject.ViewModels
                 SendString(text);
             });
         }
-
         private void SendString(string text)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(text);
             ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+
+        }
+        private void ConnectToServer()
+        {
+            int attempts = 0;
+            while (!ClientSocket.Connected)
+            {
+                try
+                {
+                    attempts++;
+                    ClientSocket.Connect(IPAddress.Loopback, PORT);
+                }
+                catch (SocketException)
+                {
+
+                }
+            }
+            MessageBox.Show("Connected");
         }
 
+
+
+
+        private void RequestLoop()
+        {
+            var receiver = Task.Run(() =>
+            {
+                while (true)
+                {
+                    ReceiveResponse();
+                }
+            });
+        }
+
+        public T FindDescendant<T>(DependencyObject obj) where T : DependencyObject
+        {
+
+            if (obj is T)
+                return obj as T;
+
+
+            int childrenCount = VisualTreeHelper.GetChildrenCount(obj);
+            if (childrenCount < 1)
+                return null;
+
+
+            for (int i = 0; i < childrenCount; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child is T)
+                    return child as T;
+            }
+
+
+            for (int i = 0; i < childrenCount; i++)
+            {
+                DependencyObject child = FindDescendant<T>(VisualTreeHelper.GetChild(obj, i));
+                if (child != null && child is T)
+                    return child as T;
+            }
+
+            return null;
+        }
         private void ReceiveResponse()
         {
-            var buffer = new byte[2048];
-            int received = ClientSocket.Receive(buffer, SocketFlags.None);
-            if (received == 0) return;
-            var data = new byte[received];
-            Array.Copy(buffer, data, received);
-            string text = Encoding.ASCII.GetString(data);
-            messageView.ExampleTxtBx.Text = text;
+            try
+            {
+
+                var buffer = new byte[2048];
+                int received = ClientSocket.Receive(buffer, SocketFlags.None);
+                if (received == 0) return;
+                var data = new byte[received];
+                Array.Copy(buffer, data, received);
+                string text = Encoding.ASCII.GetString(data);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    SenderCount++;
+                    Messages.Add(text);
+                    if (SenderCount % 2 == 0)
+                    {
+                        TextBlock nameBlock = FindDescendant<TextBlock>(messageView.messageList);
+                        nameBlock.TextAlignment = TextAlignment.Left;
+                    }
+                    if (SenderCount % 2 != 0)
+                    {
+                        TextBlock nameBlock = FindDescendant<TextBlock>(messageView.messageList);
+                        nameBlock.TextAlignment = TextAlignment.Right;
+                    }
+                });
+            }
+            catch (Exception)
+            {
+
+            }
         }
+
     }
 }

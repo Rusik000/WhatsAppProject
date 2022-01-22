@@ -36,12 +36,9 @@ namespace WhatsAppProject.ViewModels
         public RelayCommand CancelCommand { get; set; }
         public RelayCommand FilterCommand { get; set; }
         public RelayCommand SelectionChangedCommand { get; set; }
+     
 
-
-
-        private static readonly Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-        private const int PORT = 27001;
+       
         public ChatViewModel()
         {
             GetClients();
@@ -49,6 +46,8 @@ namespace WhatsAppProject.ViewModels
             {
 
             });
+
+            
             SelectionChangedCommand = new RelayCommand((sender) =>
             {
                 var item = chatView.ClientsListBx.SelectedItem as Client;
@@ -96,7 +95,7 @@ namespace WhatsAppProject.ViewModels
 
                 chat1.FullnameTxtBlck.Text = client.FullName;
                 chatView.MessageGrid.Children.Add(chat1);
-                //ConnectToServer();
+                
             }
             if (client == null)
             {
@@ -104,23 +103,8 @@ namespace WhatsAppProject.ViewModels
             }
         }
 
-        private void ConnectToServer()
-        {
-            int attempts = 0;
-            while (!MessageViewModel.ClientSocket.Connected)
-            {
-                try
-                {
-                    attempts++;
-                    MessageViewModel.ClientSocket.Connect(IPAddress.Loopback, PORT);
-                }
-                catch (SocketException)
-                {
 
-                }
-            }
-            MessageBox.Show("Connected");
-        }
+      
         private void GetClients()
         {
             Clients = new ObservableCollection<Client>

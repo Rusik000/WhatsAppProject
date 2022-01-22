@@ -5,7 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WhatsAppProject.Views.UserControls" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
-              d:DesignHeight="573" d:DesignWidth="703" Background="White" >
+              d:DesignHeight="573" d:DesignWidth="703" Background="White"  >
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.Resources>
         <ControlTemplate x:Key="TextBoxBaseControlTemplate" TargetType="{x:Type TextBoxBase}">
             <Border Background="{TemplateBinding Background}" 
@@ -53,17 +58,24 @@
             </WrapPanel>
         </Grid>
         <Canvas Grid.Row="1" >
-            <TextBlock x:Name="ExampleTxtBx" FontSize="25" Width="250"  ></TextBlock>
-            <ListBox Background="LightGreen" Opacity="0">
-                
+
+
+            <ListBox ItemsSource="{Binding Messages}" Name="messageList" Background="LightGreen" Foreground="Black" Width="680" Height="375" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel x:Name="mystackpanel" Orientation="Horizontal" Width="680">
+                            <TextBlock x:Name="MyText" FontSize="30" TextAlignment="Right" Text="{Binding}" Foreground="Black" Width="650"  ></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
             <Grid Width="60" Height="180" Canvas.Top="190" Name="HiddenGrid" Opacity="6" Visibility="Hidden"     >
-                
+
             </Grid>
         </Canvas>
         <Canvas Grid.Row="2" >
             <WrapPanel>
-                
+
                 <Button Command="{Binding AttachCommand}" Name="AttachBtn"  Width="40" Height="40" Margin="10,10,0,0" Background="LightGreen" BorderBrush="LightGreen">
                     <materialDesign:PackIcon Kind="AttachFile" Foreground="Green" BorderBrush="LightGreen" Height="40" Width="40"/>
                 </Button>
@@ -83,8 +95,8 @@
                 <Button Command="{Binding SendVoiceCommand}" Width="40" Height="40" Margin="5,5,0,0" Background="LightGreen" BorderBrush="LightGreen">
                     <materialDesign:PackIcon Kind="SettingsVoice" Foreground="Green" BorderBrush="LightGreen" Height="40" Width="40"/>
                 </Button>
-                
-                
+
+
             </WrapPanel>
         </Canvas>
     </Grid>

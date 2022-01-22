@@ -15,6 +15,7 @@ namespace ServerSide
         private const int BUFFER_SIZE = 2048;
         public const int Port = 27001;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
+        public static int CheckCount { get; set; } = 0;
 
         public static void Start()
         {
@@ -88,6 +89,7 @@ namespace ServerSide
                 socket.Send(data);
             }
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
+
         }
     }
 }

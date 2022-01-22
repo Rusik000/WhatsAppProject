@@ -74,7 +74,7 @@ namespace WhatsAppProject.ViewModels
             });
             NextCommand = new RelayCommand((sender) =>
             {
-                WriteDataToFile();
+                //WriteDataToFile();
                 // SendPhoneNumber();
                 VerificationView verificationView = new VerificationView();
                 RegisterView.Hide();
@@ -108,10 +108,8 @@ namespace WhatsAppProject.ViewModels
             }
 
         }
-
         private void SendPhoneNumber()
         {
-
             try
             {
                 var accountSid = "ACfd0363cdec733b79d54f6cbc1512492a";
@@ -135,7 +133,6 @@ namespace WhatsAppProject.ViewModels
             }
 
         }
-
         private void GetCode(object sender)
         {
             var item = sender as string;
@@ -145,7 +142,6 @@ namespace WhatsAppProject.ViewModels
             var code = GetCountriesDictionary().FirstOrDefault(x => x.Key == region.TwoLetterISORegionName).Value;
             RegisterView.PhoneCodeTxtBx.Text = "+" + code;
         }
-
         private void SetData()
         {
             CultureList = new List<string>();
@@ -163,8 +159,6 @@ namespace WhatsAppProject.ViewModels
             CultureList.Sort();
 
         }
-
-
         public Dictionary<string, string> GetCountriesDictionary()
         {
             var dictionary = new Dictionary<string, string>();
