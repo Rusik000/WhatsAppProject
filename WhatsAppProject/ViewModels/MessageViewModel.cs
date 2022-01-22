@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,8 +24,10 @@ namespace WhatsAppProject.ViewModels
 {
     public class MessageViewModel : BaseViewModel
     {
-        public static Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public static Socket ClientSocket =
+        new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
+        private const int PORT = 27001;
         public Chat1 messageView { get; set; }
         public RelayCommand AttachCommand { get; set; }
         public RelayCommand SendTextCommand { get; set; }
@@ -34,30 +38,33 @@ namespace WhatsAppProject.ViewModels
         public RelayCommand MouseLeaveCommand { get; set; }
 
         public RelayCommand LoadedCommand { get; set; }
-
-        private ObservableCollection<string> _messages;
-
-        public ObservableCollection<string> Messages
-        {
-            get { return _messages; }
-            set { _messages = value; OnPropertyChanged(); }
-        }
-
-        private static readonly Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-        private const int PORT = 27001;
         public int Count { get; set; } = 0;
 
-        public int SenderCount { get; set; } = 0;
+
+        public bool IsText { get; set; } = false;
+        public static bool isImage { get; set; } = false;
+        public static bool isFile { get; set; } = false;
+
+        public static bool isVoice { get; set; } = false;
+
+        public bool RecordVoice { get; set; } = false;
+
+        public string FilePath { get; set; } = String.Empty;
+
+
+        Timer timer1 = new Timer();
+
+        [DllImport("winmm.dll", EntryPoint = "mciSendStringA", ExactSpelling = true, CharSet = CharSet.Ansi, SetLastError = true)]
+        private static extern int record(string lpstrCommand, string lpstrReturnString, int uReturnLength, int hwndCallback);
 
         public MessageViewModel()
         {
-            Messages = new ObservableCollection<string>();
             LoadedCommand = new RelayCommand((sender) =>
             {
                 ConnectToServer();
                 RequestLoop();
             });
+
             AttachCommand = new RelayCommand((sender) =>
             {
                 AddAttachUserControl();
@@ -65,7 +72,6 @@ namespace WhatsAppProject.ViewModels
 
             MouseEnterCommand = new RelayCommand((sender) =>
             {
-
                 if (messageView.MessageTxtbx.Text == "Type a message")
                 {
                     messageView.MessageTxtbx.Text = String.Empty;
@@ -93,15 +99,36 @@ namespace WhatsAppProject.ViewModels
             SendTextCommand = new RelayCommand((sender) =>
             {
                 SendRequest();
+                IsText = true;
             });
             SendVoiceCommand = new RelayCommand((sender) =>
             {
-                MessageBox.Show("SendVoice");
-
+                if (RecordVoice == false)
+                {
+                    BeginToRecord();                    
+                }
+                if (RecordVoice == true)
+                {
+                    EndToRecord();   
+                }
+                RecordVoice = true;
             });
         }
 
-
+        private void EndToRecord()
+        {
+            timer1.Stop();
+            timer1.Enabled = false;
+            record("save recsound C:/Users/rusla/OneDrive", "", 0, 0);
+            record("close recsound", "", 0, 0);
+        }
+        private void BeginToRecord()
+        {
+            timer1.Enabled = true;
+            timer1.Start();
+            record("open new Type waveaudio Alias recsound", "", 0, 0);
+            record("record recsound", "", 0, 0);
+        }
         private void AddAttachUserControl()
         {
             if (Count == 0)
@@ -131,7 +158,6 @@ namespace WhatsAppProject.ViewModels
         {
             byte[] buffer = Encoding.ASCII.GetBytes(text);
             ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-
         }
         private void ConnectToServer()
         {
@@ -150,8 +176,6 @@ namespace WhatsAppProject.ViewModels
             }
             MessageBox.Show("Connected to Server");
         }
-
-
         private void RequestLoop()
         {
             var receiver = Task.Run(() =>
@@ -162,7 +186,6 @@ namespace WhatsAppProject.ViewModels
                 }
             });
         }
-
         public Image ByteArrayToImage(byte[] buffer)
         {
             Image returnImage = null;
@@ -190,17 +213,31 @@ namespace WhatsAppProject.ViewModels
                 if (received == 0) return;
                 var data = new byte[received];
                 Array.Copy(buffer, data, received);
-                string text = Encoding.ASCII.GetString(data);
-                Image img = ByteArrayToImage(data);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    if (img != null)
+                    if (IsText == true)
                     {
+                        string text = Encoding.ASCII.GetString(data);
+                        var stackpanel = new StackPanel();
+                        stackpanel.Width = 650;
+                        stackpanel.Height = 60;
+                        TextBlock textBlock = new TextBlock();
+                        textBlock.Height = 60;
+                        textBlock.FontSize = 25;
+                        textBlock.Text = text;
+                        textBlock.HorizontalAlignment = HorizontalAlignment.Right;
+                        stackpanel.Children.Add(textBlock);
+                        messageView.messageList.Items.Add(stackpanel);
+                        IsText = false;
+                    }
+
+                    if (isImage == true)
+                    {
+                        Image img = ByteArrayToImage(data);
                         var stackpanel = new StackPanel();
                         stackpanel.Width = 650;
                         stackpanel.Height = 150;
-                        stackpanel.Orientation = Orientation.Horizontal;
                         img.Width = 170;
                         img.Height = 150;
                         Thickness margin = img.Margin;
@@ -210,42 +247,48 @@ namespace WhatsAppProject.ViewModels
                         img.Stretch = Stretch.Fill;
                         stackpanel.Children.Add(img);
                         messageView.messageList.Items.Add(stackpanel);
+                        isImage = false;
                     }
-                    if (img == null)
+
+                    if (isFile == true)
                     {
+                        FilePath = Encoding.ASCII.GetString(data);
                         var stackpanel = new StackPanel();
                         stackpanel.Width = 650;
-                        stackpanel.Height = 60;
+                        stackpanel.Height = 150;
                         stackpanel.Orientation = Orientation.Horizontal;
-                        TextBlock textBlock = new TextBlock();
-                        textBlock.Height = 60;
-                        textBlock.FontSize = 25;
-                        textBlock.Text = text;
-                        textBlock.HorizontalAlignment = HorizontalAlignment.Right;
-                        stackpanel.Children.Add(textBlock);
+                        Button button = new Button();
+                        Thickness margin1 = button.Margin;
+                        margin1.Left = 400;
+                        button.Margin = margin1;
+                        button.Width = 100;
+                        button.Height = 50;
+                        button.Click += Button_Click;
+                        button.Content = "Open File";
+                        button.FontSize = 15;
+                        button.Background = Brushes.DarkGreen;
+
+                        Image pdfimage = null;
+                        pdfimage = new Image();
+                        pdfimage.Width = 100;
+                        pdfimage.Height = 100;
+                        pdfimage.Source = new BitmapImage(new Uri("C:/Users/rusla/Source/Repos/WhatsAppProject/WhatsAppProject/Images/File.png"));
+                        Thickness margin = pdfimage.Margin;
+                        margin.Left = 10;
+                        pdfimage.Margin = margin;
+                        pdfimage.HorizontalAlignment = HorizontalAlignment.Right;
+                        pdfimage.Stretch = Stretch.Fill;
+                        stackpanel.Children.Add(button);
+                        stackpanel.Children.Add(pdfimage);
                         messageView.messageList.Items.Add(stackpanel);
+                        isFile = false;
                     }
 
-                    //if (img == null)
-                    //{
-                    //    var stackpanel = new StackPanel();
-                    //    stackpanel.Width = 650;
-                    //    stackpanel.Height = 150;
-                    //    stackpanel.Orientation = Orientation.Horizontal;
-                    //    Image pdfimage = null;
-                    //    pdfimage = new Image();
-                    //    pdfimage.Width = 170;
-                    //    pdfimage.Height = 150;
-                    //    pdfimage.Source = new BitmapImage(new Uri("../Images/File.png"));
-                    //    Thickness margin = pdfimage.Margin;
-                    //    margin.Left = 500;
-                    //    pdfimage.Margin = margin;
-                    //    pdfimage.HorizontalAlignment = HorizontalAlignment.Right;
-                    //    pdfimage.Stretch = Stretch.Fill;
-                    //    stackpanel.Children.Add(pdfimage);
-                    //    messageView.messageList.Items.Add(stackpanel);
-                    //}
+                    if (isVoice == true)
+                    {
 
+                        isVoice = false;
+                    }
                 });
             }
             catch (Exception)
@@ -253,6 +296,9 @@ namespace WhatsAppProject.ViewModels
 
             }
         }
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(FilePath);
+        }
     }
 }

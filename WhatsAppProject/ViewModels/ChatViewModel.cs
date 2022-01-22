@@ -108,10 +108,10 @@ namespace WhatsAppProject.ViewModels
                 new Client
                 {
                     Id=1,
-                    FullName="Racon Ziqi",
-                    ImagePath="../Images/Ziqi.jpg",
-                    Message="Nagarirsan Kele?",
-                    Time="8:28 AM"
+                    FullName="John Wick",
+                    ImagePath="../Images/Profile1.png",
+                    Message="How are you?",
+                    Time="9:28 AM"
                 }
             };
         }

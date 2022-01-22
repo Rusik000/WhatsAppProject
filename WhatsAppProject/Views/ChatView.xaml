@@ -104,7 +104,7 @@
                                 <WrapPanel>
                                     <Ellipse Width="100" Height="100">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding ImagePath}" />
+                                            <ImageBrush ImageSource="{Binding ImagePath}" Stretch="Fill" />
                                         </Ellipse.Fill>
                                     </Ellipse>
                                     <StackPanel Width="240" >

@@ -186,24 +186,6 @@
     <Resource Include="Images\Default .png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Ziqi.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Murad.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Kamran.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Huseyn.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Refeal.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Kenan.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ServerSide\ServerSide.csproj">
       <Project>{48ec65f1-b67e-43f3-9d23-a4c96ae08ab4}</Project>
       <Name>ServerSide</Name>
@@ -211,6 +193,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\File.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Profile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Profile1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.3.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.3.0\build\MaterialDesignThemes.targets')" />

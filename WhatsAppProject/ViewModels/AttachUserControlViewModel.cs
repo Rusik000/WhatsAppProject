@@ -23,35 +23,46 @@ namespace WhatsAppProject.ViewModels
         {
             SendImageCommand = new RelayCommand((sender) =>
             {
-                OpenFileDialog open = new OpenFileDialog();
-                open.Filter = "PNG (*.png)|*.png|JPEG (*.jpeg)|*.jpeg|JPG (*.jpg)|*.jpg";
-                open.FilterIndex = 1;
-                open.Multiselect = false;
-                if (Convert.ToBoolean(open.ShowDialog()) == true)
-                {
-                    string text = open.FileName;
-                    byte[] buffer = Encoding.ASCII.GetBytes(text);
-                    MessageViewModel.ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-                }
+                MessageViewModel.isImage = true;
+                SendImage();        
             });
             SendFileCommand = new RelayCommand((sender) =>
             {
-                OpenFileDialog open = new OpenFileDialog();
-                open.Filter = "TXT (*.txt)|*.txt|PDF (*.pdf)|*.pdf|DOCX (*.docx)|*.docx";
-                open.FilterIndex = 1;
-                open.Multiselect = false;
-                if (Convert.ToBoolean(open.ShowDialog()) == true)
-                {
-                    string text = open.FileName;
-                    byte[] buffer = Encoding.ASCII.GetBytes(text);
-                    MessageViewModel.ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-                }
-
+                MessageViewModel.isFile = true;
+                SendFile();           
             });
             SendLocationCommand = new RelayCommand((sender) =>
             {
-                MessageBox.Show("SendLocation");
+                
             });
+        }
+
+        private void SendFile()
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "TXT (*.txt)|*.txt|PDF (*.pdf)|*.pdf|DOCX (*.docx)|*.docx";
+            open.FilterIndex = 1;
+            open.Multiselect = false;
+            if (Convert.ToBoolean(open.ShowDialog()) == true)
+            {
+                string text = open.FileName;
+                byte[] buffer = Encoding.ASCII.GetBytes(text);
+                MessageViewModel.ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+            }
+        }
+
+        private void SendImage()
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "PNG (*.png)|*.png|JPEG (*.jpeg)|*.jpeg|JPG (*.jpg)|*.jpg";
+            open.FilterIndex = 1;
+            open.Multiselect = false;
+            if (Convert.ToBoolean(open.ShowDialog()) == true)
+            {
+                string text = open.FileName;
+                byte[] buffer = Encoding.ASCII.GetBytes(text);
+                MessageViewModel.ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+            }
         }
     }
 }

@@ -60,7 +60,7 @@
         <Canvas Grid.Row="1" >
 
 
-            <ListBox  Name="messageList" Background="LightGreen" Foreground="Black" Width="680" Height="375" >
+            <ListBox  BorderBrush="LightGreen" BorderThickness="1" Name="messageList" Background="LightGreen" Foreground="Black" Width="680" Height="375" >
                
             </ListBox>
            

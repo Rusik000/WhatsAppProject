@@ -176,7 +176,7 @@ namespace WhatsAppProject.ViewModels
             dictionary.Add("AU", "61");
             dictionary.Add("AW", "297");
             dictionary.Add("AX", "358-18");
-            dictionary.Add("AZ", "994"); // or +374-97
+            dictionary.Add("AZ", "994"); 
             dictionary.Add("BA", "387");
             dictionary.Add("BB", "1-246");
             dictionary.Add("BD", "880");
