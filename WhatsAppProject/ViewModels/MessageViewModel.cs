@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -161,7 +163,6 @@ namespace WhatsAppProject.ViewModels
             });
         }
 
-   
         public Image ByteArrayToImage(byte[] buffer)
         {
             Image returnImage = null;
@@ -191,10 +192,10 @@ namespace WhatsAppProject.ViewModels
                 Array.Copy(buffer, data, received);
                 string text = Encoding.ASCII.GetString(data);
                 Image img = ByteArrayToImage(data);
-                
+
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    if (img!= null)
+                    if (img != null)
                     {
                         var stackpanel = new StackPanel();
                         stackpanel.Width = 650;
@@ -210,20 +211,41 @@ namespace WhatsAppProject.ViewModels
                         stackpanel.Children.Add(img);
                         messageView.messageList.Items.Add(stackpanel);
                     }
-                    if (img==null)
+                    if (img == null)
                     {
                         var stackpanel = new StackPanel();
                         stackpanel.Width = 650;
                         stackpanel.Height = 60;
                         stackpanel.Orientation = Orientation.Horizontal;
-                        TextBlock textBlock = new TextBlock();                
+                        TextBlock textBlock = new TextBlock();
                         textBlock.Height = 60;
                         textBlock.FontSize = 25;
                         textBlock.Text = text;
-                        textBlock.HorizontalAlignment = HorizontalAlignment.Right;                    
+                        textBlock.HorizontalAlignment = HorizontalAlignment.Right;
                         stackpanel.Children.Add(textBlock);
                         messageView.messageList.Items.Add(stackpanel);
                     }
+
+                    //if (img == null)
+                    //{
+                    //    var stackpanel = new StackPanel();
+                    //    stackpanel.Width = 650;
+                    //    stackpanel.Height = 150;
+                    //    stackpanel.Orientation = Orientation.Horizontal;
+                    //    Image pdfimage = null;
+                    //    pdfimage = new Image();
+                    //    pdfimage.Width = 170;
+                    //    pdfimage.Height = 150;
+                    //    pdfimage.Source = new BitmapImage(new Uri("../Images/File.png"));
+                    //    Thickness margin = pdfimage.Margin;
+                    //    margin.Left = 500;
+                    //    pdfimage.Margin = margin;
+                    //    pdfimage.HorizontalAlignment = HorizontalAlignment.Right;
+                    //    pdfimage.Stretch = Stretch.Fill;
+                    //    stackpanel.Children.Add(pdfimage);
+                    //    messageView.messageList.Items.Add(stackpanel);
+                    //}
+
                 });
             }
             catch (Exception)
