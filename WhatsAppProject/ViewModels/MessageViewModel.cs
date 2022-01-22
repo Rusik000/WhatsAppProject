@@ -9,8 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using WhatsAppProject.Command;
 using WhatsAppProject.Views.UserControls;
 
@@ -96,6 +98,8 @@ namespace WhatsAppProject.ViewModels
 
             });
         }
+
+
         private void AddAttachUserControl()
         {
             if (Count == 0)
@@ -142,10 +146,8 @@ namespace WhatsAppProject.ViewModels
 
                 }
             }
-            MessageBox.Show("Connected");
+            MessageBox.Show("Connected to Server");
         }
-
-
 
 
         private void RequestLoop()
@@ -159,59 +161,68 @@ namespace WhatsAppProject.ViewModels
             });
         }
 
-        public T FindDescendant<T>(DependencyObject obj) where T : DependencyObject
+   
+        public Image ByteArrayToImage(byte[] buffer)
         {
-
-            if (obj is T)
-                return obj as T;
-
-
-            int childrenCount = VisualTreeHelper.GetChildrenCount(obj);
-            if (childrenCount < 1)
+            Image returnImage = null;
+            string path = Encoding.UTF8.GetString(buffer);
+            try
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    returnImage = new Image();
+                    returnImage.Source = new BitmapImage(new Uri(path));
+                });
+                return returnImage;
+            }
+            catch (Exception)
+            {
                 return null;
-
-
-            for (int i = 0; i < childrenCount; i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child is T)
-                    return child as T;
             }
-
-
-            for (int i = 0; i < childrenCount; i++)
-            {
-                DependencyObject child = FindDescendant<T>(VisualTreeHelper.GetChild(obj, i));
-                if (child != null && child is T)
-                    return child as T;
-            }
-
-            return null;
         }
         private void ReceiveResponse()
         {
             try
             {
-
                 var buffer = new byte[2048];
                 int received = ClientSocket.Receive(buffer, SocketFlags.None);
                 if (received == 0) return;
                 var data = new byte[received];
                 Array.Copy(buffer, data, received);
                 string text = Encoding.ASCII.GetString(data);
+                Image img = ByteArrayToImage(data);
+                
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    SenderCount++;
-                    Messages.Add(text);
-                    if (SenderCount % 2 == 0)
+                    if (img!= null)
                     {
-                        TextBlock nameBlock = FindDescendant<TextBlock>(messageView.messageList);
-                        nameBlock.TextAlignment = TextAlignment.Left;
+                        var stackpanel = new StackPanel();
+                        stackpanel.Width = 650;
+                        stackpanel.Height = 150;
+                        stackpanel.Orientation = Orientation.Horizontal;
+                        img.Width = 170;
+                        img.Height = 150;
+                        Thickness margin = img.Margin;
+                        margin.Left = 500;
+                        img.Margin = margin;
+                        img.HorizontalAlignment = HorizontalAlignment.Right;
+                        img.Stretch = Stretch.Fill;
+                        stackpanel.Children.Add(img);
+                        messageView.messageList.Items.Add(stackpanel);
                     }
-                    if (SenderCount % 2 != 0)
+                    if (img==null)
                     {
-                        TextBlock nameBlock = FindDescendant<TextBlock>(messageView.messageList);
-                        nameBlock.TextAlignment = TextAlignment.Right;
+                        var stackpanel = new StackPanel();
+                        stackpanel.Width = 650;
+                        stackpanel.Height = 60;
+                        stackpanel.Orientation = Orientation.Horizontal;
+                        TextBlock textBlock = new TextBlock();                
+                        textBlock.Height = 60;
+                        textBlock.FontSize = 25;
+                        textBlock.Text = text;
+                        textBlock.HorizontalAlignment = HorizontalAlignment.Right;                    
+                        stackpanel.Children.Add(textBlock);
+                        messageView.messageList.Items.Add(stackpanel);
                     }
                 });
             }

@@ -60,15 +60,10 @@
         <Canvas Grid.Row="1" >
 
 
-            <ListBox ItemsSource="{Binding Messages}" Name="messageList" Background="LightGreen" Foreground="Black" Width="680" Height="375" >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel x:Name="mystackpanel" Orientation="Horizontal" Width="680">
-                            <TextBlock x:Name="MyText" FontSize="30" TextAlignment="Right" Text="{Binding}" Foreground="Black" Width="650"  ></TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
+            <ListBox  Name="messageList" Background="LightGreen" Foreground="Black" Width="680" Height="375" >
+               
             </ListBox>
+           
             <Grid Width="60" Height="180" Canvas.Top="190" Name="HiddenGrid" Opacity="6" Visibility="Hidden"     >
 
             </Grid>

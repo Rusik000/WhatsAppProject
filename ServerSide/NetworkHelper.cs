@@ -79,7 +79,6 @@ namespace ServerSide
                 clientsSockets.Remove(current);
                 return;
             }
-
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);

@@ -30,15 +30,12 @@ namespace WhatsAppProject.ViewModels
             get { return _clients; }
             set { _clients = value; OnPropertyChanged(); }
         }
-
         public RelayCommand MouseEnterCommand { get; set; }
         public RelayCommand MouseLeaveCommand { get; set; }
         public RelayCommand CancelCommand { get; set; }
         public RelayCommand FilterCommand { get; set; }
         public RelayCommand SelectionChangedCommand { get; set; }
-     
-
-       
+        public int Count { get; set; } = 0;
         public ChatViewModel()
         {
             GetClients();
@@ -46,12 +43,14 @@ namespace WhatsAppProject.ViewModels
             {
 
             });
-
-            
             SelectionChangedCommand = new RelayCommand((sender) =>
             {
-                var item = chatView.ClientsListBx.SelectedItem as Client;
-                CarryItemToUserControl(item);
+                Count++;
+                if (Count==1)
+                {
+                    var item = chatView.ClientsListBx.SelectedItem as Client;
+                    CarryItemToUserControl(item);
+                }
             });
             MouseEnterCommand = new RelayCommand((sender) =>
             {
@@ -95,16 +94,13 @@ namespace WhatsAppProject.ViewModels
 
                 chat1.FullnameTxtBlck.Text = client.FullName;
                 chatView.MessageGrid.Children.Add(chat1);
-                
+
             }
             if (client == null)
             {
                 return;
             }
         }
-
-
-      
         private void GetClients()
         {
             Clients = new ObservableCollection<Client>
@@ -116,46 +112,6 @@ namespace WhatsAppProject.ViewModels
                     ImagePath="../Images/Ziqi.jpg",
                     Message="Nagarirsan Kele?",
                     Time="8:28 AM"
-                },
-                new Client
-                {
-                    Id=2,
-                    FullName="Kamran Step",
-                    ImagePath="../Images/Kamran.jpg",
-                    Message="Derse gel",
-                    Time="4:25 AM"
-                },
-                new Client
-                {
-                    Id=3,
-                    FullName="Huseyn Step",
-                    ImagePath="../Images/Huseyn.jpg",
-                    Message="Gotur gor kimdi?",
-                    Time="2:25 PM"
-                },
-                new Client
-                {
-                    Id=4,
-                    FullName="Refael Step",
-                    ImagePath="../Images/Refeal.jpg",
-                    Message="Memati zor oynayir ee",
-                    Time="03:40 AM"
-                },
-                new Client
-                {
-                    Id=5,
-                    FullName="Murad Mati",
-                    ImagePath="../Images/Murad.jpg",
-                    Message="KFC-nin qabagindayam gel",
-                    Time="  5:40 PM"
-                },
-                new Client
-                {
-                    Id=6,
-                    FullName="0513861009",
-                    ImagePath="../Images/Kenan.jpg",
-                    Message="teamsden kod atmisam baxa bilersen?",
-                    Time="7:40 PM"
                 }
             };
         }
