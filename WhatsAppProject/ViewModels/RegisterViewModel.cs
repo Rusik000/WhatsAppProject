@@ -39,31 +39,28 @@ namespace WhatsAppProject.ViewModels
         public RelayCommand NextCommand { get; set; }
         public RelayCommand LoadedCommand { get; set; }
         public Client client { get; set; }
-        public int Count { get; set; } = 0;
 
-        public string filename { get; set; } = " ";
+       
         public RegisterViewModel()
         {
             LoadedCommand = new RelayCommand((sender) =>
             {
-                //Count++;
-                //filename = "MyAllData.txt";
-                //if (File.Exists(filename))
-                //{
-                //    using (var fs = new FileStream(filename, FileMode.OpenOrCreate))
-                //    {
-                //        using (var sr = new StreamReader(fs, Encoding.ASCII))
-                //        {
-                //            var text = sr.ReadToEnd();
-                //            if (text == "555280008" || text == "0555280008")
-                //            {
-                //                RegisterView.Hide();
-                //                ChatView chatView = new ChatView();
-                //                chatView.Show();
-                //            }
-                //        }
-                //    }
-                //}
+                if (File.Exists("Ruslan"))
+                {
+                    using (var fs = new FileStream("Ruslan", FileMode.OpenOrCreate))
+                    {
+                        using (var sr = new StreamReader(fs, Encoding.ASCII))
+                        {
+                            var text = sr.ReadToEnd();
+                            if (text == "555280008" || text == "0555280008")
+                            {
+                                RegisterView.Hide();
+                                ChatView chatView = new ChatView();
+                                chatView.Show();
+                            }
+                        }
+                    }
+                }
             });
             SetData();
             SelectionChanged = new RelayCommand((sender) =>
@@ -72,8 +69,8 @@ namespace WhatsAppProject.ViewModels
             });
             NextCommand = new RelayCommand((sender) =>
             {
-                //WriteDataToFile();
-                // SendPhoneNumber();
+                WriteDataToFile();
+                SendPhoneNumber();
                 VerificationView verificationView = new VerificationView();
                 RegisterView.Hide();
                 verificationView.Show();
@@ -97,10 +94,11 @@ namespace WhatsAppProject.ViewModels
                 PhoneNumber = RegisterView.PhoneTxtBx.Text
             };
 
+
             using (FileStream fs = new FileStream($"{user.Name}.txt", FileMode.OpenOrCreate))
             {
                 using (StreamWriter sw = new StreamWriter(fs, Encoding.ASCII))
-                {                   
+                {
                     sw.Write(user.PhoneNumber);
                 }
             }
@@ -111,7 +109,7 @@ namespace WhatsAppProject.ViewModels
             try
             {
                 var accountSid = "ACfd0363cdec733b79d54f6cbc1512492a";
-                var authToken = "4d24952de3bc85e6aebf077b596a5055";
+                var authToken = "38e5acb498b0cab3b7b1074ad6029b17";
                 TwilioClient.Init(accountSid, authToken);
 
                 Number = RegisterView.PhoneCodeTxtBx.Text + RegisterView.PhoneTxtBx.Text;
@@ -176,7 +174,7 @@ namespace WhatsAppProject.ViewModels
             dictionary.Add("AU", "61");
             dictionary.Add("AW", "297");
             dictionary.Add("AX", "358-18");
-            dictionary.Add("AZ", "994"); 
+            dictionary.Add("AZ", "994");
             dictionary.Add("BA", "387");
             dictionary.Add("BB", "1-246");
             dictionary.Add("BD", "880");

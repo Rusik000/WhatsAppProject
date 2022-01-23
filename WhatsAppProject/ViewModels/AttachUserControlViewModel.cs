@@ -23,13 +23,12 @@ namespace WhatsAppProject.ViewModels
         {
             SendImageCommand = new RelayCommand((sender) =>
             {
-                MessageViewModel.isImage = true;
-                SendImage();        
+                SendImage();            
             });
             SendFileCommand = new RelayCommand((sender) =>
             {
-                MessageViewModel.isFile = true;
-                SendFile();           
+                SendFile();
+                MessageViewModel.isFile = true;                
             });
             SendLocationCommand = new RelayCommand((sender) =>
             {

@@ -82,6 +82,7 @@ namespace ServerSide
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
+
             foreach (var socket in clientsSockets)
             {
                 byte[] data = Encoding.ASCII.GetBytes(text);
