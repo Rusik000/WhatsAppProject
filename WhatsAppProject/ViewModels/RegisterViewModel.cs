@@ -69,8 +69,8 @@ namespace WhatsAppProject.ViewModels
             });
             NextCommand = new RelayCommand((sender) =>
             {
-                WriteDataToFile();
-                SendPhoneNumber();
+                //WriteDataToFile();
+                //SendPhoneNumber();
                 VerificationView verificationView = new VerificationView();
                 RegisterView.Hide();
                 verificationView.Show();
