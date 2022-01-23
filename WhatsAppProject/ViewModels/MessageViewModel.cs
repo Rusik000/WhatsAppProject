@@ -242,6 +242,7 @@ namespace WhatsAppProject.ViewModels
         {
 
             string text = Encoding.ASCII.GetString(data);
+            FilePath = text;
             var stackpanel = new StackPanel();
             stackpanel.Width = 650;
             stackpanel.Height = 150;
